@@ -1,0 +1,24 @@
+#################################################################
+#                                                               #
+#                       Packages/Energy                         #
+#                                                               #
+#################################################################
+
+#################################################################
+#                                                               #
+#                         Sensors                               #
+#                                                               #
+#################################################################
+
+sensor:
+  - platform: integration
+    source: sensor.tomada_escritorio_power
+    name: Office Energy
+    unit_prefix: k
+    round: 2
+
+  - platform: integration
+    source: sensor.tomada_da_sala_power
+    name: Living Room Energy
+    unit_prefix: k
+    round: 2

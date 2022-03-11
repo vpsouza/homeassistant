@@ -1,0 +1,48 @@
+#################################################################
+#                                                               #
+#                      Packages/Lighting                        #
+#                                                               #
+#################################################################
+
+#################################################################
+#                                                               #
+#                         Automations                           #
+#                                                               #
+#################################################################
+
+## Some automations for this package have now been moved to Node-RED please see Node-Red Flows folder within this package for more infomation! ##
+
+automation:
+  - alias: "Presença: Chegando e saindo de casa"
+    trigger:
+      - platform: state
+        entity_id: group.alguem_em_casa
+        from: "not_home"
+        to: "home"
+        id: alguem_chegou_em_casa
+      - platform: state
+        entity_id: group.alguem_em_casa
+        from: "home"
+        to: "not_home"
+        id: ninguem_em_casa
+
+    action:
+      - choose:
+          # IF alguem chegou em casa
+          - conditions:
+              - condition: trigger
+                id: "alguem_chegou_em_casa"
+            sequence:
+              - service: light.turn_on
+                entity_id: light.sala_de_estar
+                # data_template:
+                  # brightness: "{{ trigger.to_state.state | int }}"
+          # ELIF todos saíram de casa
+          - conditions:
+              - condition: trigger
+                id: "ninguem_em_casa"
+            sequence:
+              - service: light.turn_off
+                entity_id: light.todas_as_luzes
+                # data_template:
+                  # brightness: "{{ trigger.to_state.state | int }}"
