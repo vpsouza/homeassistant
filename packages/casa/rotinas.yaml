@@ -1,0 +1,7 @@
+input_boolean:
+  modo_visitas:
+    name: Recebendo visitas
+    icon: mdi:account-plus-outline
+  modo_ferias:
+    name: Ausência temporária extendida da família
+    icon: mdi:airplane-takeoff

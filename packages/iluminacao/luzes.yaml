@@ -1,0 +1,112 @@
+light:
+  - platform: switch
+    name: Fundos
+    entity_id: switch.fundos
+
+  - platform: group
+    name: Sala de Jantar
+    entities:
+      - light.sala_de_jantar_1
+      - light.sala_de_jantar_2
+      - light.sala_de_jantar_3
+
+  - platform: group
+    name: Toda a Sala
+    entities:
+      - light.sala_de_jantar
+      - light.sala_de_estar
+      - light.tv_room_light
+
+  - platform: group
+    name: Todas as Luzes
+    entities:
+      - light.toda_a_sala
+      - light.office_light
+      - light.fundos
+
+automation:
+  - alias: "Luzes baseadas em presenca"
+    id: "luzes_baseadas_em_presenca"
+    trigger:
+      - platform: state
+        entity_id: input_boolean.ninguem_em_casa
+        from: "on"
+        to: "off"
+        id: "alguem_chegou_em_casa"
+      - platform: state
+        entity_id: input_boolean.ninguem_em_casa
+        from: "off"
+        to: "on"
+        id: "ninguem_em_casa"
+    action:
+      - choose:
+          - conditions:
+              - condition: and
+                conditions:
+                  - condition: sun
+                    after: sunset
+                    after_offset: "-01:00:00"
+                  - condition: trigger
+                    id: "alguem_chegou_em_casa"
+            sequence:
+              - service: light.turn_on
+                entity_id: light.sala_de_estar
+          - conditions:
+              - condition: trigger
+                id: "ninguem_em_casa"
+            sequence:
+              - service: light.turn_off
+                entity_id: light.todas_as_luzes
+
+scene:
+  - name: Café da manhã
+    entities:
+      light.sala_de_jantar_1:
+        min_mireds: 153
+        max_mireds: 500
+        brightness: 89.00000000000001
+        color_temp: 153.00000000000006
+        state: "on"
+      light.sala_de_jantar_2:
+        min_mireds: 153
+        max_mireds: 500
+        brightness: 89.00000000000001
+        color_temp: 153.00000000000006
+        state: "on"
+      light.sala_de_jantar_3:
+        min_mireds: 153
+        max_mireds: 500
+        brightness: 89.00000000000001
+        color_temp: 153.00000000000006
+        state: "on"
+      light.sala_de_estar:
+        state: "off"
+    icon: mdi:tea
+
+  - name: Jantar
+    entities:
+      light.sala_de_jantar_1:
+        min_mireds: 153
+        max_mireds: 500
+        brightness: 89.00000000000001
+        color_temp: 500
+        state: "on"
+      light.sala_de_jantar_2:
+        min_mireds: 153
+        max_mireds: 500
+        brightness: 89.00000000000001
+        color_temp: 500
+        state: "on"
+      light.sala_de_jantar_3:
+        min_mireds: 153
+        max_mireds: 500
+        brightness: 89.00000000000001
+        color_temp: 500
+        state: "on"
+      light.sala_de_estar:
+        min_mireds: 153
+        max_mireds: 500
+        brightness: 89.00000000000001
+        color_temp: 500
+        state: "on"
+    icon: mdi:food-turkey

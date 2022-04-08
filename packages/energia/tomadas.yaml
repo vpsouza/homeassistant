@@ -22,3 +22,9 @@ sensor:
     name: Living Room Energy
     unit_prefix: k
     round: 2
+
+  - platform: integration
+    source: sensor.tomada_maquina_de_lavar_power
+    name: Washing Machine Energy
+    unit_prefix: k
+    round: 2

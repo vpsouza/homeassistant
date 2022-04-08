@@ -1,0 +1,47 @@
+input_boolean:
+  lavagem_roupas_iniciada:
+    name: Lavagem de roupas iniciada
+    icon: mdi:washing-machine-alert
+  lavagem_roupas_concluida:
+    name: Lavagem de roupas concluída
+    icon: mdi:washing-machine-off
+
+automation:
+  - alias: "Máquina de Lavar: Lavagem de roupas iniciada"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.tomada_maquina_de_lavar_power
+        above: 5
+        for:
+          minutes: 5
+        id: lavagem_roupas_iniciada
+      - platform: numeric_state
+        entity_id: sensor.tomada_maquina_de_lavar_power
+        below: 5
+        for:
+          minutes: 15
+        id: lavagem_roupas_concluida
+    action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.lavagem_roupas_iniciada
+
+  - alias: "Máquina de Lavar: Lavagem de roupas concluída"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.tomada_maquina_de_lavar_power
+        below: 5
+        for:
+          minutes: 15
+    condition:
+      condition: state
+      entity_id: input_boolean.lavagem_roupas_iniciada
+      state: "on"
+    action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.lavagem_roupas_concluida
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.lavagem_roupas_iniciada
+      - delay:
+          hours: 3
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.lavagem_roupas_concluida
