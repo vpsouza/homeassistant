@@ -1,29 +1,3 @@
-light:
-  - platform: switch
-    name: Fundos
-    entity_id: switch.fundos
-
-  - platform: group
-    name: Sala de Jantar
-    entities:
-      - light.sala_de_jantar_1
-      - light.sala_de_jantar_2
-      - light.sala_de_jantar_3
-
-  - platform: group
-    name: Toda a Sala
-    entities:
-      - light.sala_de_jantar
-      - light.sala_de_estar
-      - light.tv_room_light
-
-  - platform: group
-    name: Todas as Luzes
-    entities:
-      - light.toda_a_sala
-      - light.office_light
-      - light.fundos
-
 automation:
   - alias: "Luzes baseadas em presenca"
     id: "luzes_baseadas_em_presenca"
