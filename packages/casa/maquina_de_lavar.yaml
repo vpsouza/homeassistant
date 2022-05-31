@@ -14,7 +14,6 @@ automation:
         above: 5
         for:
           minutes: 5
-        id: lavagem_roupas_iniciada
     action:
       - service: input_boolean.turn_on
         entity_id: input_boolean.lavagem_roupas_iniciada
@@ -25,7 +24,7 @@ automation:
         entity_id: sensor.tomada_maquina_de_lavar_power
         below: 5
         for:
-          minutes: 15
+          minutes: 30
     condition:
       condition: state
       entity_id: input_boolean.lavagem_roupas_iniciada
