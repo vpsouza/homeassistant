@@ -32,55 +32,74 @@ automation:
               - service: light.turn_off
                 entity_id: light.todas_as_luzes
 
-scene:
-  - name: Café da manhã
-    entities:
-      light.sala_de_jantar_1:
-        min_mireds: 153
-        max_mireds: 500
-        brightness: 89.00000000000001
-        color_temp: 153.00000000000006
-        state: "on"
-      light.sala_de_jantar_2:
-        min_mireds: 153
-        max_mireds: 500
-        brightness: 89.00000000000001
-        color_temp: 153.00000000000006
-        state: "on"
-      light.sala_de_jantar_3:
-        min_mireds: 153
-        max_mireds: 500
-        brightness: 89.00000000000001
-        color_temp: 153.00000000000006
-        state: "on"
-      light.sala_de_estar:
-        state: "off"
-    icon: mdi:tea
+  - alias: "Luz do Escritório baseada em presença"
+    id: "luz_escritorio_baseada_em_presenca"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.presenca_escritorio_occupancy
+        from: "on"
+        to: "off"
+        id: "ninguem_no_escritório"
+      - platform: state
+        entity_id: binary_sensor.presenca_escritorio_occupancy
+        from: "off"
+        to: "on"
+        id: "alguem_no_escritorio"
+    action:
+      - choose:
+          - conditions:
+              - condition: and
+                conditions:
+                  - condition: sun
+                    after: sunset
+                    after_offset: "-01:00:00"
+                  - condition: numeric_state
+                    entity_id: sensor.presenca_escritorio_illuminance_lux
+                    below: 5
+                  - condition: trigger
+                    id: "alguem_no_escritorio"
+            sequence:
+              - service: light.turn_on
+                entity_id: light.office_light
+          - conditions:
+              - condition: trigger
+                id: "ninguem_no_escritório"
+            sequence:
+              - service: light.turn_off
+                entity_id: light.office_light
 
-  - name: Jantar
-    entities:
-      light.sala_de_jantar_1:
-        min_mireds: 153
-        max_mireds: 500
-        brightness: 89.00000000000001
-        color_temp: 500
-        state: "on"
-      light.sala_de_jantar_2:
-        min_mireds: 153
-        max_mireds: 500
-        brightness: 89.00000000000001
-        color_temp: 500
-        state: "on"
-      light.sala_de_jantar_3:
-        min_mireds: 153
-        max_mireds: 500
-        brightness: 89.00000000000001
-        color_temp: 500
-        state: "on"
-      light.sala_de_estar:
-        min_mireds: 153
-        max_mireds: 500
-        brightness: 89.00000000000001
-        color_temp: 500
-        state: "on"
-    icon: mdi:food-turkey
+  - alias: "Luz da Escada baseada em presença"
+    id: "luz_escada_baseada_em_presenca"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.presenca_escada_occupancy
+        from: "on"
+        to: "off"
+        id: "ninguem_na_escada"
+      - platform: state
+        entity_id: binary_sensor.presenca_escada_occupancy
+        from: "off"
+        to: "on"
+        id: "alguem_na_escada"
+    action:
+      - choose:
+          - conditions:
+              - condition: and
+                conditions:
+                  - condition: state
+                    entity_id:  input_boolean.ninguem_em_casa
+                    state: 'off'
+                  - condition: numeric_state
+                    entity_id: sensor.presenca_escada_illuminance_lux
+                    below: 5
+                  - condition: trigger
+                    id: "alguem_na_escada"
+            sequence:
+              - service: light.turn_on
+                entity_id: light.escada
+          - conditions:
+              - condition: trigger
+                id: "ninguem_na_escada"
+            sequence:
+              - service: light.turn_off
+                entity_id: light.escada
