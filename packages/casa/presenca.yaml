@@ -2,9 +2,17 @@ group:
   alguem_em_casa:
     name: Alguém está em casa
     entities:
-      - device_tracker.iphone_do_vinicius
-      - device_tracker.iphone_de_mariana
+      - person.vinicius
+      - person.mariana
     all: false
+
+device_tracker:
+  - platform: ping
+    hosts:
+      ping_iphone_mari: !secret mari_iphone_ip_addr
+      ping_iphone_vini: !secret vini_iphone_ip_addr
+    count: 2
+    consider_home: 60
 
 input_boolean:
   notify_home:
