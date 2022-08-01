@@ -39,6 +39,8 @@ automation:
         entity_id: binary_sensor.presenca_escritorio_occupancy
         from: "on"
         to: "off"
+        for: 
+          minutes: 3
         id: "ninguem_no_escritório"
       - platform: state
         entity_id: binary_sensor.presenca_escritorio_occupancy
@@ -72,12 +74,12 @@ automation:
     id: "luz_escada_baseada_em_presenca"
     trigger:
       - platform: state
-        entity_id: binary_sensor.presenca_escada_occupancy
+        entity_id: binary_sensor.presenca_escada
         from: "on"
         to: "off"
         id: "ninguem_na_escada"
       - platform: state
-        entity_id: binary_sensor.presenca_escada_occupancy
+        entity_id: binary_sensor.presenca_escada
         from: "off"
         to: "on"
         id: "alguem_na_escada"
@@ -86,12 +88,6 @@ automation:
           - conditions:
               - condition: and
                 conditions:
-                  - condition: state
-                    entity_id:  input_boolean.ninguem_em_casa
-                    state: 'off'
-                  - condition: numeric_state
-                    entity_id: sensor.presenca_escada_illuminance_lux
-                    below: 5
                   - condition: trigger
                     id: "alguem_na_escada"
             sequence:
@@ -103,3 +99,26 @@ automation:
             sequence:
               - service: light.turn_off
                 entity_id: light.escada
+
+  - alias: "Teste Feeder 1"
+    id: "test_feeder_1"
+    trigger:
+      platform: state
+      entity_id: input_number.feeder_1_motor_control
+    action:
+      - service: esphome.cat_feeder_1_control_stepper
+        data_template:
+          target: "{{trigger.to_state.state | int}}"
+
+  - alias: "Teste Feeder 2"
+    id: "test_feeder_2"
+    trigger:
+      platform: state
+      entity_id: input_number.feeder_1_motor_control
+    action:
+      - service: esphome.cat_feeder_1_control_stepper
+        data:
+          target: 400
+      - service: esphome.cat_feeder_1_control_stepper
+        data:
+          target: 800
