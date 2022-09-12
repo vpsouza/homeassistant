@@ -41,12 +41,12 @@ automation:
         to: "off"
         for: 
           minutes: 3
-        id: "ninguem_no_escritório"
+        id: "ninguem_no_escritório_off"
       - platform: state
         entity_id: binary_sensor.presenca_escritorio_occupancy
         from: "off"
         to: "on"
-        id: "alguem_no_escritorio"
+        id: "alguem_no_escritorio_off"
     action:
       - choose:
           - conditions:
@@ -77,12 +77,12 @@ automation:
         entity_id: binary_sensor.presenca_escada
         from: "on"
         to: "off"
-        id: "ninguem_na_escada"
+        id: "ninguem_na_escada_off"
       - platform: state
         entity_id: binary_sensor.presenca_escada
         from: "off"
         to: "on"
-        id: "alguem_na_escada"
+        id: "alguem_na_escada_off"
     action:
       - choose:
           - conditions:
@@ -99,26 +99,3 @@ automation:
             sequence:
               - service: light.turn_off
                 entity_id: light.escada
-
-  - alias: "Teste Feeder 1"
-    id: "test_feeder_1"
-    trigger:
-      platform: state
-      entity_id: input_number.feeder_1_motor_control
-    action:
-      - service: esphome.cat_feeder_1_control_stepper
-        data_template:
-          target: "{{trigger.to_state.state | int}}"
-
-  - alias: "Teste Feeder 2"
-    id: "test_feeder_2"
-    trigger:
-      platform: state
-      entity_id: input_number.feeder_1_motor_control
-    action:
-      - service: esphome.cat_feeder_1_control_stepper
-        data:
-          target: 400
-      - service: esphome.cat_feeder_1_control_stepper
-        data:
-          target: 800
